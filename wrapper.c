@@ -1,10 +1,6 @@
 #include <Python.h>
 #include "wrapper.h"
 
-/* Docstrings */
-static char module_docstring[] =
-    "Esta biblioteca é um wrapper ";
-
 /* Available functions */
 static PyObject *adc_read_channel(PyObject *self, PyObject *args);
 static PyObject *adc_read_all_channels(PyObject *self, PyObject *args);
@@ -21,20 +17,24 @@ static PyMethodDef module_methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-/* Initialize the module */
-PyMODINIT_FUNC initads1256(void)
-{
-    PyObject *m = Py_InitModule3("ads1256", module_methods, module_docstring);
-    if (m == NULL)
-        return;
+static struct PyModuleDef ads1256 = {
+        PyModuleDef_HEAD_INIT,
+        "ads1256",
+        "ads1256 python module",
+        -1,
+        module_methods
+};
 
+/* Initialize the module */
+PyMODINIT_FUNC PyInit_ads1256(void)
+{
+        return PyModule_Create(&ads1256);
 }
 static PyObject *adc_start(PyObject *self, PyObject *args)
 {
 
     char * ganho, *sps;
     PyObject *yerr_obj;
-    double v[8];
     int value ;
                                          
 
@@ -72,7 +72,6 @@ static PyObject *adc_read_channel(PyObject *self, PyObject *args)
 
 static PyObject *adc_read_all_channels(PyObject *self, PyObject *args)
 {
-    PyObject *yerr_obj;
     long int v[8];
                                          
 
